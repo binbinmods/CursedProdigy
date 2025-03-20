@@ -1,0 +1,15 @@
+{
+    "Card0": "cursedprodigycursedelements",
+    "Card1": "emberstorm",
+    "Card2": "curseofelements",
+    "Card3": "curseoffragility",
+    "Card4": "icelance",
+    "Card5": "",
+    "CardSpecial0": "",
+    "CardSpecial1": "",
+    "PackClass": "mage",
+    "PackID": "seren",
+    "PackName": "Seren",
+    "PerkList": [],
+    "RequiredClass": "cursedprodigy"
+}

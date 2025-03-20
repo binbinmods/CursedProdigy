@@ -1,0 +1,15 @@
+{
+    "BaseSkin": true,
+    "PerkLevel": 0,
+    "SkinGO": "skinseren",
+    "SkinID": "cursedprodigybase",
+    "SkinName": "Default",
+    "SkinOrder": 0,
+    "SkinSubclass": "cursedprodigy",
+    "Sku": "",
+    "SpritePortrait": "serenPortrait",
+    "SpritePortraitGrande": "serenPortraitGrande",
+    "SpriteSilueta": "serenSilueta",
+    "SpriteSiluetaGrande": "serenSiluetaGrande",
+    "SteamStat": ""
+}
