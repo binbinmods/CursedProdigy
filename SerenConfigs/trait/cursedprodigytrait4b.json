@@ -1,5 +1,5 @@
 {
-    "Activation": "",
+    "Activation": "CastCard",
     "AuraCurseBonus1": "",
     "AuraCurseBonus2": "",
     "AuraCurseBonus3": "",
@@ -23,7 +23,7 @@
     "DamageBonusPercentValue": 0.0,
     "DamageBonusPercentValue2": 0.0,
     "DamageBonusPercentValue3": 0.0,
-    "Description": "Fire Empowers Cold, Cold Empowers Lightning, Lightning Empowers Fire. Empowered Spells deal 30% bonus damage that is increased by 30% for each consecutively played Empowered Spell.",
+    "Description": "Fire Empowers Cold, Cold Empowers Lightning, Lightning Empowers Fire. Empowered Spells deal 30% bonus damage that is increased by 30% for each consecutively played Empowered Spell this turn.",
     "HealFlatBonus": 0,
     "HealPercentBonus": 0.0,
     "HealReceivedFlatBonus": 0,

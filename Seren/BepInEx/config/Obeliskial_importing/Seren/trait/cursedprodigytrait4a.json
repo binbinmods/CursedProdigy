@@ -1,5 +1,5 @@
 {
-    "Activation": "",
+    "Activation": "None",
     "AuraCurseBonus1": "",
     "AuraCurseBonus2": "",
     "AuraCurseBonus3": "",
@@ -23,7 +23,7 @@
     "DamageBonusPercentValue": 0.0,
     "DamageBonusPercentValue2": 0.0,
     "DamageBonusPercentValue3": 0.0,
-    "Description": "The first Curse you play each turn deals triple damage. Cursed Elements gives +2 Elemental Charges for every 3 Curse Spells in your deck. Sorcerous Mastery no longer increases the cost.",
+    "Description": "The first Curse you play each turn deals +200% damage. Cursed Elements gives +2 Elemental Charges for every 3 Curse Spells in your deck. Sorcerous Mastery no longer increases the cost.",
     "HealFlatBonus": 0,
     "HealPercentBonus": 0.0,
     "HealReceivedFlatBonus": 0,

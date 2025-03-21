@@ -19,16 +19,21 @@ namespace CursedProdigy
 
         public static string[] simpleTraitList = ["trait0", "trait1a", "trait1b", "trait2a", "trait2b", "trait3a", "trait3b", "trait4a", "trait4b"];
 
-        public static string[] myTraitList =  simpleTraitList.Select(trait => subclassname + trait).ToArray(); // Needs testing
+        public static string[] myTraitList = simpleTraitList.Select(trait => subclassname + trait).ToArray(); // Needs testing
 
         static string trait0 = myTraitList[0];
         static string trait2a = myTraitList[3];
         static string trait2b = myTraitList[4];
         static string trait4a = myTraitList[7];
         static string trait4b = myTraitList[8];
+        public static int damageMultiplier = 0;
+        public static int firstCurseDamage = 0;
+        public static HashSet<Enums.CardType> empoweredTypes = [Enums.CardType.Fire_Spell, Enums.CardType.Cold_Spell, Enums.CardType.Lightning_Spell];
+        // public static HashSet<Enums.CardType> currentTypes = [Enums.CardType.Fire_Spell, Enums.CardType.Cold_Spell, Enums.CardType.Lightning_Spell];
 
 
         public static string debugBase = "Binbin - Testing " + heroName + " ";
+
 
         public static void DoCustomTrait(string _trait, ref Trait __instance)
         {
@@ -52,64 +57,96 @@ namespace CursedProdigy
             NPC[] teamNpc = MatchManager.Instance.GetTeamNPC();
 
             if (_trait == trait0)
-            { // TODO trait 0
+            { // Max Powerful Charges +10. Immune to Bless.
+                // done in GACM
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-
-                if (!IsLivingHero(_character))
-                {
-                    return;
-                }
-                int bonusActivations = _character.HaveTrait(trait4a) ? 1 : 0;
-                if (CanIncrementTraitActivations(_trait, bonusActivations:bonusActivations))
-                {
-                    IncrementTraitActivations(_trait);
-                    DisplayRemainingChargesForTrait(ref _character, traitData);
-
-                }
             }
 
 
             else if (_trait == trait2a)
-            { // TODO trait 2a
+            { // trait 2a: Gain +1 Burn, Chill, and Spark for every 2 Curse Spells in your deck.",
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                DisplayTraitScroll(ref _character, traitData);
+                // DisplayTraitScroll(ref _character, traitData);
 
             }
 
 
 
             else if (_trait == trait2b)
-            { // TODO trait 2b
+            { // trait 2b: At the start of your turn, increase the cost of all of your cards by 1 until discarded. Then half the cost of the highest cost Fire Spell in your hand that costs 6 or more. Repeat for Cold, Lighting, Shadow, and Curse Spells.
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                DisplayTraitScroll(ref _character, traitData);
+                if (!AtOManager.Instance.TeamHaveTrait(trait4a))
+                {
+                    for (int i = 0; i < heroHand.Count; i++)
+                    {
+                        CardData cardData = Globals.Instance.GetCardData(heroHand[i]);
+                        ReduceCardCost(ref cardData, _character, -1);
+                    }
+                }
+
+                Enums.CardType[] cardTypes = [Enums.CardType.Fire_Spell, Enums.CardType.Cold_Spell, Enums.CardType.Lightning_Spell, Enums.CardType.Shadow_Spell, Enums.CardType.Curse_Spell];
+                foreach (Enums.CardType cardType in cardTypes)
+                {
+                    CardData highestCostCard = GetRandomHighestCostCard(cardType, heroHand);
+                    if (highestCostCard != null && highestCostCard.EnergyCost >= 6)
+                    {
+                        int amountToReduce = Mathf.FloorToInt(highestCostCard.EnergyCost / 2);
+                        ReduceCardCost(ref highestCostCard, _character, amountToReduce);
+                    }
+                }
+
+                // DisplayTraitScroll(ref _character, traitData);
 
             }
 
             else if (_trait == trait4a)
-            { // TODO trait 4a
+            { // The first Curse you play each turn deals triple damage. Cursed Elements gives +2 Elemental Charges for every 3 Curse Spells in your deck. Sorcerous Mastery no longer increases the cost.
+                // done in GetTraitAuraCurseModifiersPostfix and GetTraitDamagePercentModifiersPostfix
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
+                if (CanIncrementTraitActivations(traitId) && _castedCard != null && _castedCard.HasCardType(Enums.CardType.Curse_Spell))
+                {
+                    firstCurseDamage = 200;
+                    IncrementTraitActivations(traitId);
+                }
+                else
+                {
+                    firstCurseDamage = 0;
+                }
 
             }
 
             else if (_trait == trait4b)
-            { // TODO trait 4b
+            { // Fire Empowers Cold, Cold Empowers Lightning, Lightning Empowers Fire. Empowered Spells deal 30% bonus damage that is increased by 30% for each consecutively played Empowered Spell this turn.
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                if (CanIncrementTraitActivations(_trait))
+                HashSet<Enums.CardType> cardSet = [.. _castedCard.CardTypeAux];
+                cardSet.Add(_castedCard.CardType);
+                cardSet.IntersectWith(empoweredTypes);
+                if (cardSet.Count > 0)
                 {
-                    IncrementTraitActivations(_trait);
-                    DisplayRemainingChargesForTrait(ref _character, traitData);
-
+                    damageMultiplier += 30;
+                    empoweredTypes = [];
+                    foreach (Enums.CardType cardType in cardSet)
+                    {
+                        empoweredTypes.Add(GetEmpoweredType(cardType));
+                    }
                 }
+                else
+                {
+                    // empoweredTypes = [];
+                    empoweredTypes = [Enums.CardType.Fire_Spell, Enums.CardType.Cold_Spell, Enums.CardType.Lightning_Spell];
+                    damageMultiplier = 0;
+                }
+
             }
 
         }
@@ -133,75 +170,26 @@ namespace CursedProdigy
             }
             return true;
         }
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Character), "SetEvent")]
-        public static void SetEventPrefix(ref Character __instance, ref Enums.EventActivation theEvent, Character target = null)
-        {
-            /*if (theEvent == Enums.EventActivation.AuraCurseSet && !__instance.IsHero && target != null && target.IsHero && target.HaveTrait("ulfvitrconductor") && __instance.HasEffect("spark"))
-            { // if NPC has wet applied to them, deal 50% of their sparks as indirect lightning damage
-                __instance.IndirectDamage(Enums.DamageType.Lightning, Functions.FuncRoundToInt((float)__instance.GetAuraCharges("spark") * 0.5f));
-            }
-            if (theEvent == Enums.EventActivation.BeginTurn && __instance.IsHero && (__instance.HaveTrait("pestilyhealingtoxins")||__instance.HaveTrait("pestilytoxichealing"))){
-                level5ActivationCounter=0;
-                // Plugin.Log.LogInfo("Binbin - PestilyBiohealer - Reset Activation Counter: "+ level5ActivationCounter);
-            }
-            
-            */
-        }
-
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(AtOManager), "HeroLevelUp")]
-        public static bool HeroLevelUpPrefix(ref AtOManager __instance, Hero[] ___teamAtO, int heroIndex, string traitId)
-        {
-            Hero hero = ___teamAtO[heroIndex];
-            Plugin.Log.LogDebug(debugBase + "Level up before conditions for subclass " + hero.SubclassName + " trait id " + traitId);
-
-            string traitOfInterest = myTraitList[4]; //Learn real magic
-            if (hero.AssignTrait(traitId))
-            {
-                TraitData traitData = Globals.Instance.GetTraitData(traitId);
-                if ((UnityEngine.Object)traitData != (UnityEngine.Object)null && traitId == traitOfInterest)
-                {
-                    Plugin.Log.LogDebug(debugBase + "Learn Real Magic inside conditions");
-                    Globals.Instance.SubClass[hero.SubclassName].HeroClassSecondary = Enums.HeroClass.Mage;
-                }
-
-            }
-            return true;
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Character), nameof(Character.DamageBonus))]
-        public static void DamageBonusPostfix(ref Character __instance, ref float[] __result, Enums.DamageType DT)
-        {
-            LogDebug("DamageBonusPostfix");
-            // __result is a float[] of [bonusFlatDamage, bonusPercentDamage]
-            if (!IsLivingHero(__instance) || AtOManager.Instance == null || MatchManager.Instance == null)
-                return;
-
-            string traitOfInterest = trait4a;
-            if (AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, traitOfInterest))// && DT == Enums.DamageType.All)
-            {
-                int bonusDamage = 1;
-                float bonusPercentDamage = 10.0f;
-                __result[0] += bonusDamage;
-                __result[1] += bonusPercentDamage;
-            }
-        }
-
+        
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Character), nameof(Character.GetTraitDamagePercentModifiers))]
         public static void GetTraitDamagePercentModifiersPostfix(ref Character __instance, ref float __result, Enums.DamageType DamageType)
         {
             LogInfo("GetTraitDamagePercentModifiersPostfix");
-            // trait0: Gain 5% damage 
-            string traitOfInterest = trait0;
-            if (IsLivingHero(__instance) && AtOManager.Instance!= null && AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, traitOfInterest)&& MatchManager.Instance!=null)
-            {                
-                int percentToIncrease = 5;
-                __result += percentToIncrease;
+            // Fire Empowers Cold, Cold Empowers Lightning, Lightning Empowers Fire. Empowered Spells deal 30% bonus damage that is increased by 30% for each consecutively played Empowered Spell.
+            string traitOfInterest = trait4b;
+
+            if (IsLivingHero(__instance) && AtOManager.Instance != null && AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, traitOfInterest) && MatchManager.Instance != null)
+            {
+                __result += damageMultiplier;
+            }
+
+            // The first Curse you play each turn deals +200% damage
+            traitOfInterest = trait4a;
+            if (IsLivingHero(__instance) && AtOManager.Instance != null && AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, traitOfInterest) && MatchManager.Instance != null)
+            {
+
+                __result += firstCurseDamage;
             }
         }
 
@@ -218,18 +206,77 @@ namespace CursedProdigy
 
             switch (_acId)
             {
-                case "burn":
+                case "powerful":
                     traitOfInterest = trait0;
-                    if (IfCharacterHas(characterOfInterest, CharacterHas.Trait, traitOfInterest, AppliesTo.None))
+                    if (IfCharacterHas(characterOfInterest, CharacterHas.Trait, traitOfInterest, AppliesTo.ThisHero))
                     {
-                        __result.ACName = "something";
+                        __result.MaxCharges += 5;
+                        __result.MaxMadnessCharges += 5;
+                    }
+                    string itemId = "cursedprodigycursedwandrare";
+                    if (IfCharacterHas(characterOfInterest, CharacterHas.Item, itemId, AppliesTo.Heroes))
+                    {
+                        __result.MaxCharges += 5;
+                        __result.MaxMadnessCharges += 5;
                     }
                     break;
             }
 
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Character), nameof(Character.GetTraitAuraCurseModifiers))]
+        public static void GetTraitAuraCurseModifiersPostfix(ref Character __instance, ref Dictionary<string, int> __result)
+        {
+            LogDebug("GetTraitAuraCurseModifiersPostfix");
+            string traitOfInterest = trait4a;
+            if (!IsLivingHero(__instance) || AtOManager.Instance == null || !AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, trait2a) || MatchManager.Instance == null)
+            {
+                return;
+            }
 
+
+            int nCurses = GetDeck(__instance).Count(card => Globals.Instance.GetCardData(card).HasCardType(Enums.CardType.Curse_Spell));
+            int nToIncrease = !AtOManager.Instance.TeamHaveTrait(traitOfInterest) ? Mathf.FloorToInt(nCurses / 2) : Mathf.FloorToInt(2 * nCurses / 3);
+            // int nToIncrease = Mathf.FloorToInt(nInsane * 0.1f);
+            if (nToIncrease <= 0)
+            {
+                return;
+            }
+            if (!__result.ContainsKey("burn"))
+            {
+                __result["burn"] = 0;
+            }
+            __result["burn"] += nToIncrease;
+
+            if (!__result.ContainsKey("chill"))
+            {
+                __result["chill"] = 0;
+            }
+            __result["chill"] += nToIncrease;
+
+            if (!__result.ContainsKey("spark"))
+            {
+                __result["spark"] = 0;
+            }
+            __result["spark"] += nToIncrease;
+        }
+
+
+        public static Enums.CardType GetEmpoweredType(Enums.CardType cardType)
+        {
+            switch (cardType)
+            {
+                case Enums.CardType.Fire_Spell:
+                    return Enums.CardType.Cold_Spell;
+                case Enums.CardType.Cold_Spell:
+                    return Enums.CardType.Lightning_Spell;
+                case Enums.CardType.Lightning_Spell:
+                    return Enums.CardType.Fire_Spell;
+                default:
+                    return Enums.CardType.Fire_Spell;
+            }
+        }
 
     }
 }
