@@ -173,7 +173,7 @@ namespace CursedProdigy
         
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Character), nameof(Character.GetTraitDamagePercentModifiers))]
-        public static void GetTraitDamagePercentModifiersPostfix(ref Character __instance, ref float __result, Enums.DamageType DamageType)
+        public static void GetTraitDamagePercentModifiersPostfix(ref Character __instance, ref float __result, Enums.DamageType DamageType, bool ___useCache)
         {
             LogInfo("GetTraitDamagePercentModifiersPostfix");
             // Fire Empowers Cold, Cold Empowers Lightning, Lightning Empowers Fire. Empowered Spells deal 30% bonus damage that is increased by 30% for each consecutively played Empowered Spell.
@@ -230,7 +230,7 @@ namespace CursedProdigy
         {
             LogDebug("GetTraitAuraCurseModifiersPostfix");
             string traitOfInterest = trait4a;
-            if (!IsLivingHero(__instance) || AtOManager.Instance == null || !AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, trait2a) || MatchManager.Instance == null)
+            if (isDamagePreviewActive|| isCalculateDamageActive || !IsLivingHero(__instance) || AtOManager.Instance == null || !AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, trait2a) || MatchManager.Instance == null)
             {
                 return;
             }
@@ -247,19 +247,19 @@ namespace CursedProdigy
             {
                 __result["burn"] = 0;
             }
-            __result["burn"] += nToIncrease;
+            __result["burn"] = nToIncrease;
 
             if (!__result.ContainsKey("chill"))
             {
                 __result["chill"] = 0;
             }
-            __result["chill"] += nToIncrease;
+            __result["chill"] = nToIncrease;
 
             if (!__result.ContainsKey("spark"))
             {
                 __result["spark"] = 0;
             }
-            __result["spark"] += nToIncrease;
+            __result["spark"] = nToIncrease;
         }
 
 
@@ -276,6 +276,34 @@ namespace CursedProdigy
                 default:
                     return Enums.CardType.Fire_Spell;
             }
+        }
+
+        public static bool isDamagePreviewActive;
+        public static bool isCalculateDamageActive;
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(MatchManager), nameof(MatchManager.SetDamagePreview))]
+        public static void SetDamagePreviewPrefix()
+        {
+            isDamagePreviewActive = true;
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MatchManager), nameof(MatchManager.SetDamagePreview))]
+        public static void SetDamagePreviewPostfix()
+        {
+            isDamagePreviewActive = false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(CharacterItem), nameof(CharacterItem.CalculateDamagePrePostForThisCharacter))]
+        public static void CalculateDamagePrePostForThisCharacterPrefix()
+        {
+            isCalculateDamageActive = true;
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(CharacterItem), nameof(CharacterItem.CalculateDamagePrePostForThisCharacter))]
+        public static void CalculateDamagePrePostForThisCharacterPostfix()
+        {
+            isCalculateDamageActive = false;
         }
 
     }
