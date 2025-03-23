@@ -4,6 +4,9 @@ A hero mod, introducing Seren, a <InsertDescription.>
 
 This currently does not include any events or quests related to Seren other than those available to all heroes or all heroes of a specific class.
 
+### Known Bugs
+- The damage description always appears as if the card is empowered, even if the card would not be
+
 A couple of notes:
 ## Notes:
 - I understand that things are going to be janky at times, and there are definitely bugs that will be worked out

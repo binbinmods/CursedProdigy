@@ -1340,11 +1340,17 @@ namespace CursedProdigy
                 LogDebug("Reducing card Cost - temporary");
                 cardData.EnergyReductionTemporal += amountToReduce;
             }
+            LogDebug($"Reducing card Cost - getting card from table - {cardData.Id}");
+            LogDebug($"Reducing card Cost - getting card from tableinternal - {cardData.InternalId}");
+            // if(amountToReduce > 0)
+            // {
+            MatchManager.Instance?.GetCardFromTableByIndex(cardData.InternalId).ShowEnergyModification(-amountToReduce);
+            // }            
             LogDebug("Reducing card Cost - updates");
-            MatchManager.Instance.GetCardFromTableByIndex(cardData.InternalId).ShowEnergyModification(-amountToReduce);
-            MatchManager.Instance.UpdateHandCards();
+            MatchManager.Instance?.UpdateHandCards();
+            LogDebug("Reducing card Cost - logging");
             // this.character.HeroItem.ScrollCombatText(Texts.Instance.GetText("traits_Scholar") + TextChargesLeft(MatchManager.Instance.activatedTraits[nameof (scholar)], traitData.TimesPerTurn), Enums.CombatScrollEffectType.Trait);
-            MatchManager.Instance.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(currentCharacter.HeroIndex));
+            MatchManager.Instance?.CreateLogCardModification(cardData.InternalId, MatchManager.Instance.GetHero(currentCharacter.HeroIndex));
             LogDebug("Reducing card Cost - END");
         }
 

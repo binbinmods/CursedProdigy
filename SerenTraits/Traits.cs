@@ -81,11 +81,11 @@ namespace CursedProdigy
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
-                if (!AtOManager.Instance.TeamHaveTrait(trait4a))
+                if (!AtOManager.Instance.TeamHaveTrait(trait4a) && IsLivingHero(_character))
                 {
                     for (int i = 0; i < heroHand.Count; i++)
                     {
-                        CardData cardData = Globals.Instance.GetCardData(heroHand[i]);
+                        CardData cardData = MatchManager.Instance.GetCardData(heroHand[i]);
                         ReduceCardCost(ref cardData, _character, -1);
                     }
                 }
@@ -94,9 +94,10 @@ namespace CursedProdigy
                 foreach (Enums.CardType cardType in cardTypes)
                 {
                     CardData highestCostCard = GetRandomHighestCostCard(cardType, heroHand);
-                    if (highestCostCard != null && highestCostCard.EnergyCost >= 6)
+                    int energy = highestCostCard.EnergyCost - highestCostCard.EnergyReductionPermanent - highestCostCard.EnergyReductionTemporal;
+                    if (highestCostCard != null && energy >= 6 && IsLivingHero(_character))
                     {
-                        int amountToReduce = Mathf.FloorToInt(highestCostCard.EnergyCost / 2);
+                        int amountToReduce = Mathf.FloorToInt(energy / 2);
                         ReduceCardCost(ref highestCostCard, _character, amountToReduce);
                     }
                 }
