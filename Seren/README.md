@@ -1,6 +1,6 @@
 # Seren, the Cursed Prodigy
 
-A hero mod, introducing Seren, a <InsertDescription.> 
+A hero mod, introducing Seren, a Cursed Mage who excels at casting Large, Powerful spells.
 
 This currently does not include any events or quests related to Seren other than those available to all heroes or all heroes of a specific class.
 

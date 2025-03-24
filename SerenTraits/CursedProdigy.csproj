@@ -6,7 +6,7 @@
 	<Product>CursedProdigy</Product>
     <AssemblyName>com.binbin.CursedProdigy</AssemblyName>
     <Description>Seren, The CursedProdigy</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

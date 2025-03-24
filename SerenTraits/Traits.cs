@@ -77,7 +77,7 @@ namespace CursedProdigy
 
 
             else if (_trait == trait2b)
-            { // trait 2b: At the start of your turn, increase the cost of all of your cards by 1 until discarded. Then half the cost of the highest cost Fire Spell in your hand that costs 6 or more. Repeat for Cold, Lighting, Shadow, and Curse Spells.
+            { // trait 2b: At the start of your turn, increase the cost of all of your cards by 1 until discarded. Then half the cost of the highest cost Fire Spell in your hand. Repeat for Cold, Lighting, Shadow, and Curse Spells.
                 string traitName = traitData.TraitName;
                 string traitId = _trait;
                 LogDebug($"Handling Trait {traitId}: {traitName}");
@@ -95,7 +95,7 @@ namespace CursedProdigy
                 {
                     CardData highestCostCard = GetRandomHighestCostCard(cardType, heroHand);
                     int energy = highestCostCard.EnergyCost - highestCostCard.EnergyReductionPermanent - highestCostCard.EnergyReductionTemporal;
-                    if (highestCostCard != null && energy >= 6 && IsLivingHero(_character))
+                    if (highestCostCard != null && IsLivingHero(_character)) //energy >= 6 && 
                     {
                         int amountToReduce = Mathf.FloorToInt(energy / 2);
                         ReduceCardCost(ref highestCostCard, _character, amountToReduce);

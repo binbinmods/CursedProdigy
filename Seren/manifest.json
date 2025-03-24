@@ -1,8 +1,8 @@
 {
     "name": "Seren_the_Cursed_Prodigy",
-    "version_number": "0.1.0",
+    "version_number": "0.1.1",
     "website_url": "https://github.com/binbinmods/CursedProdigy",
-    "description": "New Hero Mod for Seren, the Cursed_Prodigy, a powerful mage capable of casting the largest spells of any and all elements",
+    "description": "New Hero Mod for Seren, the Cursed Prodigy, a Cursed Mage who excels at casting Large, Powerful spells.",
     "dependencies": [
         "meds-Obeliskial_Content-1.5.0"
     ]
