@@ -89,12 +89,14 @@ namespace CursedProdigy
                         ReduceCardCost(ref cardData, _character, -1);
                     }
                 }
+                // LogDebug("Increased Costs");
 
                 Enums.CardType[] cardTypes = [Enums.CardType.Fire_Spell, Enums.CardType.Cold_Spell, Enums.CardType.Lightning_Spell, Enums.CardType.Shadow_Spell, Enums.CardType.Curse_Spell];
                 foreach (Enums.CardType cardType in cardTypes)
                 {
                     CardData highestCostCard = GetRandomHighestCostCard(cardType, heroHand);
                     int energy = highestCostCard.EnergyCost - highestCostCard.EnergyReductionPermanent - highestCostCard.EnergyReductionTemporal;
+                    LogDebug($"Highest cost card: {highestCostCard.CardName} with energy {energy}, cost {highestCostCard.EnergyCost}, reduction {highestCostCard.EnergyReductionPermanent}, temporal reduction {highestCostCard.EnergyReductionTemporal}"); 
                     if (highestCostCard != null && IsLivingHero(_character)) //energy >= 6 && 
                     {
                         int amountToReduce = Mathf.FloorToInt(energy / 2);
@@ -211,8 +213,8 @@ namespace CursedProdigy
                     traitOfInterest = trait0;
                     if (IfCharacterHas(characterOfInterest, CharacterHas.Trait, traitOfInterest, AppliesTo.ThisHero))
                     {
-                        __result.MaxCharges += 5;
-                        __result.MaxMadnessCharges += 5;
+                        __result.MaxCharges += 6;
+                        __result.MaxMadnessCharges += 6;
                     }
                     string itemId = "cursedprodigycursedwandrare";
                     if (IfCharacterHas(characterOfInterest, CharacterHas.Item, itemId, AppliesTo.Heroes))

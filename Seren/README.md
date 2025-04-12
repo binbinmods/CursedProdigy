@@ -16,7 +16,7 @@ A couple of notes:
 
 This mod relies on [Obeliskial Content](https://across-the-obelisk.thunderstore.io/package/meds/Obeliskial_Content/).
 
-![Summary](https://raw.githubusercontent.com/binbinmods/Bloodrager/refs/heads/main/Assets/gorkSummary.png?token=GHSAT0AAAAAAC7MWJUCABIHA5RA5KNJWWHAZ64I5QQ)
+![Summary](https://raw.githubusercontent.com/binbinmods/CursedProdigy/refs/heads/main/Assets/serenSummary.png)
 
 
 
