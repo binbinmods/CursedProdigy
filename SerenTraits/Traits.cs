@@ -95,8 +95,12 @@ namespace CursedProdigy
                 foreach (Enums.CardType cardType in cardTypes)
                 {
                     CardData highestCostCard = GetRandomHighestCostCard(cardType, heroHand);
+                    if (highestCostCard == null)
+                    {
+                        continue;
+                    }
                     int energy = highestCostCard.EnergyCost - highestCostCard.EnergyReductionPermanent - highestCostCard.EnergyReductionTemporal;
-                    LogDebug($"Highest cost card: {highestCostCard.CardName} with energy {energy}, cost {highestCostCard.EnergyCost}, reduction {highestCostCard.EnergyReductionPermanent}, temporal reduction {highestCostCard.EnergyReductionTemporal}"); 
+                    LogDebug($"Highest cost card: {highestCostCard.CardName} with energy {energy}, cost {highestCostCard.EnergyCost}, reduction {highestCostCard.EnergyReductionPermanent}, temporal reduction {highestCostCard.EnergyReductionTemporal}");
                     if (highestCostCard != null && IsLivingHero(_character)) //energy >= 6 && 
                     {
                         int amountToReduce = Mathf.FloorToInt(energy / 2);
@@ -173,7 +177,7 @@ namespace CursedProdigy
             }
             return true;
         }
-        
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Character), nameof(Character.GetTraitDamagePercentModifiers))]
         public static void GetTraitDamagePercentModifiersPostfix(ref Character __instance, ref float __result, Enums.DamageType DamageType, bool ___useCache)
@@ -213,8 +217,8 @@ namespace CursedProdigy
                     traitOfInterest = trait0;
                     if (IfCharacterHas(characterOfInterest, CharacterHas.Trait, traitOfInterest, AppliesTo.ThisHero))
                     {
-                        __result.MaxCharges += 6;
-                        __result.MaxMadnessCharges += 6;
+                        __result.MaxCharges += 10;
+                        __result.MaxMadnessCharges += 10;
                     }
                     string itemId = "cursedprodigycursedwandrare";
                     if (IfCharacterHas(characterOfInterest, CharacterHas.Item, itemId, AppliesTo.Heroes))
@@ -233,7 +237,7 @@ namespace CursedProdigy
         {
             LogDebug("GetTraitAuraCurseModifiersPostfix");
             string traitOfInterest = trait4a;
-            if (isDamagePreviewActive|| isCalculateDamageActive || !IsLivingHero(__instance) || AtOManager.Instance == null || !AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, trait2a) || MatchManager.Instance == null)
+            if (isDamagePreviewActive || isCalculateDamageActive || !IsLivingHero(__instance) || AtOManager.Instance == null || !AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, trait2a) || MatchManager.Instance == null)
             {
                 return;
             }

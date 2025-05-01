@@ -23,7 +23,7 @@
     "DamageBonusPercentValue": 0.0,
     "DamageBonusPercentValue2": 0.0,
     "DamageBonusPercentValue3": 0.0,
-    "Description": "At the start of your turn, increase the cost of all of your cards by 1. Then half the cost of the highest cost Fire Spell in your hand that costs 6 or more. Repeat for Cold, Lighting, Shadow, and Curse Spells.",
+    "Description": "At the start of your turn, increase the cost of all of your cards by 1. Then half the cost of the highest cost Fire Spell in your hand. Repeat for Cold, Lighting, Shadow, and Curse Spells.",
     "HealFlatBonus": 0,
     "HealPercentBonus": 0.0,
     "HealReceivedFlatBonus": 0,

@@ -340,7 +340,7 @@ namespace CursedProdigy
                     MatchManager.Instance.GetCardFromTableByIndex(cardData1.InternalId).ShowEnergyModification(-num2);
                     MatchManager.Instance.UpdateHandCards();
                     _character.HeroItem.ScrollCombatText(Texts.Instance.GetText("traits_" + traitData.TraitName) + TextChargesLeft(MatchManager.Instance.activatedTraits[traitId], traitData.TimesPerTurn + bonusActivations), Enums.CombatScrollEffectType.Trait);
-                    
+
                     MatchManager.Instance.CreateLogCardModification(cardData1.InternalId, MatchManager.Instance.GetHero(_character.HeroIndex));
                     break;
                 }
@@ -1370,20 +1370,20 @@ namespace CursedProdigy
             }
             heroHand ??= MatchManager.Instance.GetHeroHand(MatchManager.Instance.GetHeroActive());
 
-            int num1 = 0;
+            int num1 = -1;
             List<CardData> cardDataList = new();
             for (int index = 0; index < heroHand.Count; ++index)
             {
                 CardData cardData = MatchManager.Instance.GetCardData(heroHand[index]);
-                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType)||cardType==Enums.CardType.None) && cardData.GetCardFinalCost() > num1)
+                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType) || cardType == Enums.CardType.None) && cardData.GetCardFinalCost() > num1)
                     num1 = cardData.GetCardFinalCost();
             }
-            if (num1 <= 0)
+            if (num1 < 0)
                 return null;
             for (int index = 0; index < heroHand.Count; ++index)
             {
                 CardData cardData = MatchManager.Instance.GetCardData(heroHand[index]);
-                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType)||cardType==Enums.CardType.None) && cardData.GetCardFinalCost() >= num1)
+                if ((Object)cardData != (Object)null && (cardData.GetCardTypes().Contains(cardType) || cardType == Enums.CardType.None) && cardData.GetCardFinalCost() >= num1)
                     cardDataList.Add(cardData);
             }
             if (cardDataList.Count <= 0)
