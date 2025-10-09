@@ -1,3 +1,9 @@
+# 0.2.0
+
+Update for AtO v1.6.22.
+
+Removed excessive logging
+
 # 0.1.4
 
 Fixed an issue with Sorcerous Mastery causing the game to crash.

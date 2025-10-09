@@ -182,7 +182,7 @@ namespace CursedProdigy
         [HarmonyPatch(typeof(Character), nameof(Character.GetTraitDamagePercentModifiers))]
         public static void GetTraitDamagePercentModifiersPostfix(ref Character __instance, ref float __result, Enums.DamageType DamageType, bool ___useCache)
         {
-            LogInfo("GetTraitDamagePercentModifiersPostfix");
+            // LogDebug("GetTraitDamagePercentModifiersPostfix");
             // Fire Empowers Cold, Cold Empowers Lightning, Lightning Empowers Fire. Empowered Spells deal 30% bonus damage that is increased by 30% for each consecutively played Empowered Spell.
             string traitOfInterest = trait4b;
 
@@ -206,7 +206,7 @@ namespace CursedProdigy
         [HarmonyPatch(typeof(AtOManager), "GlobalAuraCurseModificationByTraitsAndItems")]
         public static void GlobalAuraCurseModificationByTraitsAndItemsPostfix(ref AtOManager __instance, ref AuraCurseData __result, string _type, string _acId, Character _characterCaster, Character _characterTarget)
         {
-            LogInfo($"GACM {subclassName}");
+            // LogDebug($"GACM {subclassName}");
 
             Character characterOfInterest = _type == "set" ? _characterTarget : _characterCaster;
             string traitOfInterest;
@@ -235,7 +235,7 @@ namespace CursedProdigy
         [HarmonyPatch(typeof(Character), nameof(Character.GetTraitAuraCurseModifiers))]
         public static void GetTraitAuraCurseModifiersPostfix(ref Character __instance, ref Dictionary<string, int> __result)
         {
-            LogDebug("GetTraitAuraCurseModifiersPostfix");
+            // LogDebug("GetTraitAuraCurseModifiersPostfix");
             string traitOfInterest = trait4a;
             if (isDamagePreviewActive || isCalculateDamageActive || !IsLivingHero(__instance) || AtOManager.Instance == null || !AtOManager.Instance.CharacterHaveTrait(__instance.SubclassName, trait2a) || MatchManager.Instance == null)
             {

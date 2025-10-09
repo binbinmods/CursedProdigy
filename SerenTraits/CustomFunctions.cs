@@ -1089,7 +1089,7 @@ namespace CursedProdigy
         /// <param name="useCharacterMods">whether or not to use the AC can be buffered</param>
         public static void ApplyAuraCurseToAll(string acToApply, int nToApply, AppliesTo appliesTo, Character sourceCharacter = null, bool useCharacterMods = false, bool isPreventable = true)
         {
-            LogInfo("ApplyAuraCurseToAll");
+            LogDebug("ApplyAuraCurseToAll");
             if (MatchManager.Instance == null) { LogError("No MatchManager"); return; }
             if (sourceCharacter == null && useCharacterMods) { LogError("No Source Character"); return; }
 
